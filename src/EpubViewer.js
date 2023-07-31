@@ -1,4 +1,3 @@
-// 하이라이트 추가 기능 도전
 import React, { useState, useEffect } from "react";
 import Epub from "epubjs";
 
@@ -25,13 +24,30 @@ const EPubViewer = ({ url }) => {
           height: "92vh",
         });
 
-        newRendition.themes.register("custom", {
+        // default - 기본 테마
+        newRendition.themes.register("default", {
           h2: { color: "black !important" },
           p: { color: "black !important" },
           div: { color: "black !important" },
           a: { color: "black !important" },
         });
-        newRendition.themes.select("custom");
+
+        // highlighted - 텍스트 드래그 시 적용할 테마
+        newRendition.themes.register("highlighted", {
+          h2: { backgroundColor: "yellow !important" },
+          p: { backgroundColor: "yellow !important" },
+          div: { backgroundColor: "yellow !important" },
+          a: { backgroundColor: "yellow !important" },
+        });
+
+        newRendition.themes.select("default");
+
+        newRendition.on("selected", (cfiRange) => {
+          if (cfiRange) {
+            // 드래그한 텍스트에 하이라이트 적용
+            newRendition.annotations.highlight(cfiRange, {}, (e) => {});
+          }
+        });
 
         if (isMounted) {
           setRendition(newRendition);
